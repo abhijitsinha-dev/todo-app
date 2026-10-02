@@ -1,14 +1,52 @@
-# Workspace Guidelines for Todo App
+# Workspace Guidelines — Todo App
 
-This project follows an autonomous, quality-first workflow.
+This project follows a quality-first workflow with human-approved commits.
 
-## Active Rules
-- **UI Verification Workflow**: Refer to [.agents/rules/ui-verification-workflow.md](file:///.agents/rules/ui-verification-workflow.md).
-  - Every UI or logic modification must pass `vite-build-validator` (`npm run build`) and be visually verified using `ui-browser-verifier` across mobile, tablet, and desktop viewports.
-  - Zero console errors permitted.
+---
 
-## Active Skills in `.agents/skills/`
-1. [`ui-browser-verifier`](file:///.agents/skills/ui-browser-verifier/SKILL.md): Launches browser subagent to verify visual rendering across viewports, interactive flows, console logs, and design fidelity.
-2. [`vite-build-validator`](file:///.agents/skills/vite-build-validator/SKILL.md): Pre-flight check running `npm run build` to catch bundling or import errors.
-3. [`responsive-a11y-auditor`](file:///.agents/skills/responsive-a11y-auditor/SKILL.md): Audits touch targets (>= 44x44px), keyboard navigation, and theme color contrast.
-4. [`local-storage-auditor`](file:///.agents/skills/local-storage-auditor/SKILL.md): Audits LocalStorage schema, JSON import/export, and corrupted data recovery.
+## Project
+Todo app built with Vite + Vanilla JS (ES6+ modules, zero runtime UI overhead), plain CSS,
+hash routing (`#/`, `#/create`, `#/stats`, `#/todo/:id`, `#/settings`), and localStorage persistence.
+Entry: `src/main.js`. State: `src/services/todoStore.js`.
+
+---
+
+## Commands
+- `npm run dev` — Vite dev server (default port 5173)
+- `npm run build` — production build
+- `node scripts/auditStorage.js` — headless storage and schema audit
+
+---
+
+## Activation Model
+- Files in `.agents/rules/` are always-on constraints.
+- Files in `.agents/skills/` are triggered playbooks, loaded by their `description` field.
+- When a rule and a skill conflict, the rule wins.
+
+---
+
+## Execution Pipeline (Mandatory Order)
+Order of execution is mandatory. If any step fails, **HALT**; do not proceed to the next step or propose commits.
+
+1. **Build Gate** — `vite-build-validator`; exit code 0 within 120s before any other verification.
+2. **Storage Gate** — if `src/services/todoStore.js`, the data model, or settings schema changed → `local-storage-auditor`; 5/5 pass.
+3. **A11y Gate** — if CSS (`src/styles/index.css`), layout, or interactive components changed → `responsive-a11y-auditor`; 6/6 pass.
+4. **Browser Gate** — `ui-browser-verifier`; 7/7 pass with zero blocking findings (0 uncaught exceptions, 0 unhandled rejections, 0 404s).
+5. **Commit Gate** — see `.agents/rules/01-commit-approval.md` and the `commit-proposer` skill. Never commit without explicit user approval.
+
+---
+
+## Rules (`.agents/rules/`)
+1. `01-commit-approval.md` — never commit autonomously; require explicit approval.
+2. `02-commit-convention.md` — enforce `docs/COMMIT_CONVENTION.md` (the single source of truth).
+3. `03-execution-pipeline.md` — the ordered 5-step pipeline above, with strict HALT semantics.
+4. `04-ui-completion-gate.md` — no UI task is "done" until browser verification passes across viewports.
+
+---
+
+## Skills (`.agents/skills/`)
+1. `commit-proposer` — inspect diffs, draft conventional messages, propose, commit on approval.
+2. `local-storage-auditor` — schema, import/export, corruption recovery via `scripts/auditStorage.js`.
+3. `responsive-a11y-auditor` — touch targets ≥ 44×44, keyboard nav, WCAG contrast ≥ 4.5:1.
+4. `ui-browser-verifier` — multi-viewport rendering, interactive flows, console health.
+5. `vite-build-validator` — `npm run build` with 120s timeout.
