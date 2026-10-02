@@ -5,11 +5,12 @@ activation: always-on
 
 # Rule: Execution Pipeline
 
-Order of execution is mandatory. If any step fails, **HALT**; do not proceed to the next step or propose commits.
+Order is mandatory. HALT on any failure — do not proceed or propose commits.
 
-1. **Pre-Flight Build Gate**: Run `vite-build-validator`; require exit code `0` and finish within 120s before any other verification.
-2. **Storage Audit Gate**: If `src/services/todoStore.js`, the data model, or settings schema changed → run `local-storage-auditor`; require 5/5 checks pass (`PASS`).
-3. **Accessibility & Responsive Gate**: If CSS stylesheets (`src/styles/index.css`), layout, or interactive components changed → run `responsive-a11y-auditor`; require 6/6 checks pass (`PASS`).
-4. **Browser UI Gate**: Run `ui-browser-verifier`; require 7/7 checks pass (`PASS`) with zero blocking findings (0 uncaught exceptions, 0 unhandled rejections, 0 404s).
-5. **Doc Sync Gate**: If files or directories were created, renamed, moved, or deleted → run `doc-sync`; require 4/4 checks pass (`PASS`) to keep `README.md` and `docs/PLAN.md` reconciled before proposing commits.
-6. **Commit Gate**: Only after steps 1–5 pass may the agent propose commit messages. Follow `.agents/rules/01-commit-approval.md` and the `commit-proposer` skill.
+Build, format, and lint checks are NOT run per-task. They run at the Commit Gate.
+
+1. **Storage Audit** — if `src/services/todoStore.js`, the data model, or settings schema changed → run `local-storage-auditor`; require 5/5.
+2. **A11y Audit** — if CSS (`src/styles/index.css`), layout, or interactive components changed → run `responsive-a11y-auditor`; require 6/6.
+3. **Browser UI** — if UI or views changed → run `ui-browser-verifier`; require 7/7 with zero blocking findings (0 uncaught exceptions, 0 unhandled rejections, 0 404s).
+4. **Doc Sync** — if files or directories were created, renamed, moved, or deleted → run `doc-sync` to reconcile `docs/STRUCTURE.md`, `README.md`, and `docs/PLAN.md`.
+5. **Commit Gate** — before proposing messages, run `npm run build`, `npm run format:check`, and `npm run lint:ci`. All must pass. Then follow `.agents/rules/01-commit-approval.md` and the `commit-proposer` skill.

@@ -5,12 +5,16 @@ activation: always-on
 
 # Rule: Commit Approval
 
-- **NEVER** run `git add` or `git commit` without explicit, unequivocal user approval of the exact proposed message.
+- **NEVER** run `git add` or `git commit` without explicit user approval of the exact proposed message.
+- **NEVER** state, offer, or suggest commit messages unless the user asks.
 - Completing a task, passing builds, or finishing features does **NOT** grant permission to stage or commit.
-- **NEVER** state, offer, or suggest commit messages unless explicitly asked by the user.
-- **Staging & Commit Sequence**:
-  - When the user asks to commit, inspect unstaged changes using `git status` and `git diff`. Do **NOT** run `git add` beforehand.
-  - Propose commit message options to the user while changes remain unstaged.
-  - Keep in a revision loop if the user suggests changes until the message is explicitly approved.
-  - **ONLY** after explicit approval of the message, execute both `git add` and `git commit`.
-- Commit messages must strictly conform to `docs/COMMIT_CONVENTION.md` (uppercase is permitted only for filenames that are also uppercase, e.g. `docs/STRUCTURE.md` or `README.md`).
+
+## Sequence
+
+1. User asks to commit.
+2. Inspect unstaged changes with `git status` and `git diff` — do NOT `git add` first.
+3. Propose message options while changes remain unstaged.
+4. Revise until the user explicitly approves a specific message.
+5. Only then run `git add` and `git commit`.
+
+Commit messages must conform to `docs/COMMIT_CONVENTION.md`.

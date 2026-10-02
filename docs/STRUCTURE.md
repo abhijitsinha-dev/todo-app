@@ -23,7 +23,7 @@ todo-app/
 │       ├── local-storage-auditor/         # Schema validation & backup integrity checks
 │       ├── responsive-a11y-auditor/       # Touch target (>=44px) & accessibility checks
 │       ├── ui-browser-verifier/           # Multi-device browser verification workflow
-│       └── vite-build-validator/          # Pre-flight build compilation validator
+│       └── vite-build-validator/          # Pre-commit build compilation validator
 ├── .github/                               # GitHub configuration & CI/CD workflows
 │   └── workflows/
 │       └── deploy.yml                     # Automated GitHub Pages build & deployment
@@ -35,6 +35,8 @@ todo-app/
 ├── .vscode/                               # Workspace editor settings & extensions
 │   ├── extensions.json                    # Recommended workspace extensions (Prettier, ESLint)
 │   └── settings.json                      # Workspace editor formatting & linting defaults
+├── design/                                # Design wireframes and reference assets
+│   └── header-footer-ref.png              # Mobile-first header and footer wireframe
 ├── docs/                                  # Project documentation
 │   ├── COMMIT_CONVENTION.md               # Git commit convention guidelines & examples
 │   ├── PLAN.md                            # Comprehensive architectural and execution plan

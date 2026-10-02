@@ -1,93 +1,84 @@
 ---
 name: responsive-a11y-auditor
 description: >-
-  Use this skill to audit multi-device responsiveness (mobile, tablet, desktop),
-  touch target ergonomics (minimum 44x44px), keyboard navigation, and theme color contrast.
+  Use this skill to audit multi-device responsiveness, touch target ergonomics
+  (min 44x44px), keyboard navigation, and theme color contrast.
 ---
 
 # Responsive & Accessibility Auditor Skill
 
 ## 1. Ownership & Scope
 
-- **OWNED BY THIS SKILL**:
-  - CSS rule auditing in `src/styles/index.css` for responsive breakpoints (`<= 640px`, `641px - 1024px`, `1025px+`).
-  - Static CSS verification of mobile touch target standards (`min-height: 44px; min-width: 44px`).
-  - Keyboard accessibility handling (`Tab` focus rings, `Escape` key listeners on modals).
-  - Safe-area-inset support for mobile devices (`env(safe-area-inset-bottom)`).
-  - WCAG color contrast calculation for CSS theme tokens.
-- **DELEGATED TO `ui-browser-verifier`**:
-  - Live runtime rendering and screenshot inspection across viewports.
+- **OWNS**:
+  - CSS rule auditing in `src/styles/index.css` (breakpoints `<=640`, `641–1024`, `1025+`).
+  - Static verification of touch target rules (`min-height/min-width: 44px`).
+  - Keyboard accessibility (focus rings, Escape listeners).
+  - Safe-area-inset support (`env(safe-area-inset-bottom)`).
+  - WCAG contrast calculation for theme tokens.
+- **DELEGATED**: Runtime rendering + screenshots → `ui-browser-verifier`.
 
 ---
 
 ## 2. Preconditions
 
-Before executing this audit, verify that:
-
-1. `src/styles/index.css` exists in the repository.
-2. Modal component files (`src/components/reminderModal.js`, `src/components/confirmModal.js`) exist.
+1. `src/styles/index.css` exists.
+2. `src/components/reminderModal.js` and `src/components/confirmModal.js` exist.
 
 ---
 
 ## 3. Execution Procedure
 
-### Step 1: Static CSS Token & Rule Inspection
+### Step 1: Static CSS Inspection
 
-Use `view_file` on `src/styles/index.css`:
+Inspect `src/styles/index.css`:
 
-1. **Touch Targets (A11Y-02)**: Verify that interactive classes (`.btn`, `.tab-item`, `.form-input`, `.checkbox-custom`) include `min-height: 44px` or `min-width: 44px` (or equivalent vertical padding ≥ 12px with `line-height`).
-2. **Breakpoints (A11Y-01)**: Verify the presence of `@media (max-width: 640px)` containing single-column card stacking and mobile bottom navigation styling.
-3. **Safe-Area Insets (A11Y-03)**: Verify the mobile bottom navigation bar defines `padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px))`.
-4. **Focus Rings (A11Y-04)**: Verify `:focus-visible` defines a visible outline/ring (e.g. `outline: 2px solid ...`) for keyboard navigation.
-5. **Color Contrast (A11Y-06)**: Extract the color tokens for `--text-primary` and `--bg-card` for both Dark and Light themes. Calculate WCAG contrast ratio (formula: (L1 + 0.05) / (L2 + 0.05)); require ≥ 4.5:1.
+1. **A11Y-02 Touch targets** — `.btn`, `.tab-item`, `.form-input`, `.checkbox-custom` have `min-height/min-width: 44px` (or padding ≥ 12px with matching `line-height`).
+2. **A11Y-01 Breakpoints** — `@media (max-width: 640px)` contains single-column stacking + mobile bottom nav.
+3. **A11Y-03 Safe-area** — bottom nav defines `padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px))`.
+4. **A11Y-04 Focus rings** — `:focus-visible` defines a visible outline/ring.
+5. **A11Y-06 Contrast** — extract `--text-primary` and `--bg-card` for both themes; compute `(L1 + 0.05) / (L2 + 0.05)`; require ≥ 4.5:1.
 
-### Step 2: Component Keyboard Event Inspection
+### Step 2: Component Keyboard Check
 
-Use `view_file` on `src/components/reminderModal.js` and `src/components/confirmModal.js`:
-
-- Confirm an event listener on `keydown` checks for `e.key === 'Escape'` to dismiss open modals.
+Inspect both modal components: `keydown` listener checks for `e.key === 'Escape'`.
 
 ---
 
-## 3. Testable Success Criteria
+## 4. Testable Success Criteria
 
-| Check ID    | Verification Item       | Target                      | Success Criteria                                                        |
-| :---------- | :---------------------- | :-------------------------- | :---------------------------------------------------------------------- |
-| **A11Y-01** | Mobile Breakpoint Rules | `src/styles/index.css`      | Contains `@media (max-width: 640px)` with full-width cards & bottom nav |
-| **A11Y-02** | Touch Target Rules      | `.btn`, `.tab-item`, inputs | `min-height: 44px` or `min-width: 44px` rule explicitly present         |
-| **A11Y-03** | iOS Safe-Area Padding   | Mobile Nav container        | Uses `env(safe-area-inset-bottom)`                                      |
-| **A11Y-04** | Keyboard Focus Ring     | Interactive elements        | `:focus-visible` defines visible outline/ring                           |
-| **A11Y-05** | Modal Escape Dismiss    | Modal components            | Listens to `keydown` for `Escape` key                                   |
-| **A11Y-06** | WCAG Theme Contrast     | CSS theme tokens            | Calculated contrast between `--text-primary` and `--bg-card` is ≥ 4.5:1 |
-
----
-
-## 4. Failure Branch
-
-If any accessibility or responsive check fails:
-
-1. **HALT**: Do not proceed to commit proposals.
-2. **IDENTIFY**: Locate the missing rule (e.g. missing `min-height: 44px`, failing contrast ratio, or missing `:focus-visible`).
-3. **REPAIR**: Update `src/styles/index.css` or component files using `replace_file_content`.
-4. **RE-VERIFY**: Re-read the file with `view_file` to confirm the fix is in place.
+| Check ID    | Item               | Target                      | Success Criteria                                            |
+| :---------- | :----------------- | :-------------------------- | :---------------------------------------------------------- |
+| **A11Y-01** | Mobile breakpoint  | `src/styles/index.css`      | `@media (max-width: 640px)` present with cards + bottom nav |
+| **A11Y-02** | Touch target rules | `.btn`, `.tab-item`, inputs | `min-height`/`min-width: 44px` present                      |
+| **A11Y-03** | Safe-area padding  | Mobile nav                  | Uses `env(safe-area-inset-bottom)`                          |
+| **A11Y-04** | Focus ring         | Interactive elements        | `:focus-visible` outline defined                            |
+| **A11Y-05** | Escape dismiss     | Modal components            | `keydown` → `Escape` handled                                |
+| **A11Y-06** | Theme contrast     | CSS tokens                  | `--text-primary` vs `--bg-card` ≥ 4.5:1                     |
 
 ---
 
-## 5. Required Output Contract
+## 5. Failure Branch
 
-The agent must output a structured accessibility and responsiveness report in this exact format:
+1. **HALT** — no commit proposal.
+2. **IDENTIFY** — locate missing rule (min-height, contrast, `:focus-visible`).
+3. **REPAIR** — update `src/styles/index.css` or component.
+4. **RE-VERIFY** — re-read with `view_file`.
+
+---
+
+## 6. Required Output Contract
 
 ```markdown
 ### 📱 Responsive & Accessibility Audit Report
 
-| Check ID | Item                           | Target File            | Result      | Details                          |
-| :------- | :----------------------------- | :--------------------- | :---------- | :------------------------------- |
-| A11Y-01  | Mobile Breakpoint (640px)      | `src/styles/index.css` | PASS / FAIL | Responsive rules verified        |
-| A11Y-02  | Touch Target Rules (>= 44px)   | Buttons / Nav items    | PASS / FAIL | `min-height: 44px` rule present  |
-| A11Y-03  | Safe-Area-Inset Support        | Bottom Navigation Bar  | PASS / FAIL | `safe-area-inset-bottom` applied |
-| A11Y-04  | Keyboard Focus Visibility      | `:focus-visible`       | PASS / FAIL | Visible outline styled           |
-| A11Y-05  | Modal Escape Key Dismiss       | Modal components       | PASS / FAIL | Keydown listener active          |
-| A11Y-06  | WCAG Contrast Ratio (>= 4.5:1) | CSS theme tokens       | PASS / FAIL | Dark: X.X:1, Light: Y.Y:1        |
+| Check ID | Item                      | Target                 | Result      | Details                   |
+| :------- | :------------------------ | :--------------------- | :---------- | :------------------------ |
+| A11Y-01  | Mobile Breakpoint (640px) | `src/styles/index.css` | PASS / FAIL |                           |
+| A11Y-02  | Touch Targets (>= 44px)   | Buttons / Nav          | PASS / FAIL |                           |
+| A11Y-03  | Safe-Area Support         | Bottom Nav             | PASS / FAIL |                           |
+| A11Y-04  | Focus Visibility          | `:focus-visible`       | PASS / FAIL |                           |
+| A11Y-05  | Escape Dismiss            | Modals                 | PASS / FAIL |                           |
+| A11Y-06  | WCAG Contrast (>= 4.5:1)  | Theme tokens           | PASS / FAIL | Dark: X.X:1, Light: Y.Y:1 |
 
-**Overall Status**: [ PASSED (6/6) | FAILED (X/6) ]
+**Overall**: [ PASSED (6/6) | FAILED (X/6) ]
 ```

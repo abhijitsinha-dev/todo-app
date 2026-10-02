@@ -5,6 +5,6 @@ activation: always-on
 
 # Rule: UI Completion Gate
 
-- **NEVER** declare a UI task, view, or milestone complete until `ui-browser-verifier` has passed with zero blocking findings across Desktop, Tablet, and Mobile viewports.
-- **NEVER** launch `ui-browser-verifier` before `vite-build-validator` exits with code `0`.
-- Report both build and browser verification output tables before marking any UI task as done.
+- **NEVER** declare a UI task, view, or milestone complete until `ui-browser-verifier` passes with zero blocking findings across Desktop, Tablet, and Mobile.
+- Report the browser verification output table before marking any UI task done.
+- Pre-flight `npm run build` is deferred to the Commit Gate — not required per UI task.

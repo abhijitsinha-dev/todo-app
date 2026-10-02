@@ -9,58 +9,40 @@ description: >-
 
 ## 1. Ownership & Scope
 
-- **OWNED BY THIS SKILL**:
-  - Direct static code inspection of `src/services/todoStore.js`.
-  - Headless automated stress testing via `scripts/auditStorage.js`.
-  - Schema integrity, corrupted key recovery, serialization fallbacks, and boundary dates.
-- **DELEGATED TO `ui-browser-verifier`**:
-  - End-to-end browser interactions (e.g. clicking the "Import Backup" button in Settings, file picker dialog, rendering toast messages).
+- **OWNS**:
+  - Static inspection of `src/services/todoStore.js`.
+  - Headless stress testing via `scripts/auditStorage.js`.
+  - Schema integrity, corrupted-key recovery, serialization fallbacks, boundary dates.
+- **DELEGATED**: Browser interactions (import button, file picker, toasts) → `ui-browser-verifier`.
 
 ---
 
 ## 2. Preconditions
 
-Before running this skill, verify that:
-
-1. `scripts/auditStorage.js` exists in the repository.
-2. It exits with code `0` on all-pass and code `1` on any-fail.
-3. It emits a JSON array on stdout with the shape:
+1. `scripts/auditStorage.js` exists.
+2. It exits `0` on all-pass, `1` on any-fail.
+3. It emits a JSON array on stdout:
    ```json
-   [
-     {
-       "id": "LSA-01",
-       "name": "Check Name",
-       "target": "functionOrKey",
-       "pass": true,
-       "details": "Diagnostic string"
-     }
-   ]
+   [{ "id": "LSA-01", "name": "...", "target": "...", "pass": true, "details": "..." }]
    ```
 
 ---
 
 ## 3. Execution Procedure
 
-### Step 1: Static Code Inspection
+### Step 1: Static Inspection
 
-Use `view_file` on `src/services/todoStore.js` and verify:
+Inspect `src/services/todoStore.js`:
 
-1. Every `localStorage.getItem(...)` call is enclosed in a `try { ... } catch (e) { ... }` block.
-2. Todos fallback returns an empty array `[]` when storage is empty, null, or corrupted.
-3. Settings fallback returns the exact default:
+1. Every `localStorage.getItem(...)` wrapped in `try/catch`.
+2. Todos fallback → `[]` on empty, null, or corrupted.
+3. Settings fallback → exact default:
    ```javascript
-   {
-     theme: 'dark',
-     soundEnabled: true,
-     notificationsEnabled: false,
-     defaultReminderOffset: '0'
-   }
+   { theme: 'dark', soundEnabled: true, notificationsEnabled: false, defaultReminderOffset: '0' }
    ```
-4. `importData(raw)` validates JSON structure and schema fields before modifying storage, returning `{ success: false, error: string }` on failure rather than throwing uncaught exceptions.
+4. `importData(raw)` validates JSON/schema, returns `{ success: false, error }` on failure — never throws.
 
-### Step 2: Automated Headless Stress Test
-
-Run the audit script using `run_command`:
+### Step 2: Headless Stress Test
 
 ```powershell
 node scripts/auditStorage.js
@@ -70,41 +52,37 @@ node scripts/auditStorage.js
 
 ## 4. Testable Success Criteria
 
-| Check ID   | Assertion                                   | Expected Behavior                                                                                                     |
-| :--------- | :------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------- |
-| **LSA-01** | `todoStore.getAllTodos()` on empty storage  | Returns empty array `[]`                                                                                              |
-| **LSA-02** | `todoStore.getAllTodos()` on corrupted JSON | Catches error, issues `console.warn`, returns `[]`, does not throw                                                    |
-| **LSA-03** | `todoStore.getSettings()` on initial run    | Returns exact object `{ theme: 'dark', soundEnabled: true, notificationsEnabled: false, defaultReminderOffset: '0' }` |
-| **LSA-04** | `todoStore.exportData()`                    | Outputs valid JSON string containing `version` and `todos` array with `length >= 1`                                   |
-| **LSA-05** | `todoStore.importData("invalid json")`      | Returns `{ success: false, error: '...' }` without throwing                                                           |
+| Check ID   | Assertion                         | Expected                                          |
+| :--------- | :-------------------------------- | :------------------------------------------------ |
+| **LSA-01** | `getAllTodos()` on empty storage  | Returns `[]`                                      |
+| **LSA-02** | `getAllTodos()` on corrupted JSON | `console.warn`, returns `[]`, no throw            |
+| **LSA-03** | `getSettings()` on first run      | Exact default object                              |
+| **LSA-04** | `exportData()`                    | Valid JSON with `version` and `todos.length >= 1` |
+| **LSA-05** | `importData("invalid json")`      | `{ success: false, error }`, no throw             |
 
 ---
 
 ## 5. Failure Branch
 
-If any check fails (exit code `1` or static check fails):
-
-1. **HALT**: Stop immediately. Do not proceed to UI verification or commit proposals.
-2. **DIAGNOSE**: Parse the JSON stdout from `scripts/auditStorage.js` to identify the failing `id` and `details`.
-3. **REMEDIATE**: Modify `src/services/todoStore.js` to address the missing fallback or error catch.
-4. **RE-RUN**: Execute `node scripts/auditStorage.js` until all checks pass with exit code `0`.
+1. **HALT** — no UI verification, no commit proposal.
+2. **DIAGNOSE** — parse JSON stdout for failing `id` + `details`.
+3. **REMEDIATE** — fix `todoStore.js`.
+4. **RE-RUN** — until exit `0`.
 
 ---
 
 ## 6. Required Output Contract
 
-The agent must output a structured audit report in this exact format:
-
 ```markdown
 ### 🗄️ LocalStorage & Schema Audit Report
 
-| Check ID | Verification Item          | Target                           | Result      | Details           |
-| :------- | :------------------------- | :------------------------------- | :---------- | :---------------- |
-| LSA-01   | Default Empty Fallback     | `getAllTodos()`                  | PASS / FAIL | <diagnostic note> |
-| LSA-02   | Corrupted JSON Recovery    | `localStorage['todo_app_todos']` | PASS / FAIL | <diagnostic note> |
-| LSA-03   | Settings Default Schema    | `getSettings()`                  | PASS / FAIL | <diagnostic note> |
-| LSA-04   | Export Schema Integrity    | `exportData()`                   | PASS / FAIL | <diagnostic note> |
-| LSA-05   | Malformed Import Rejection | `importData(invalidString)`      | PASS / FAIL | <diagnostic note> |
+| Check ID | Item                       | Target                           | Result      | Details |
+| :------- | :------------------------- | :------------------------------- | :---------- | :------ |
+| LSA-01   | Default Empty Fallback     | `getAllTodos()`                  | PASS / FAIL |         |
+| LSA-02   | Corrupted JSON Recovery    | `localStorage['todo_app_todos']` | PASS / FAIL |         |
+| LSA-03   | Settings Default Schema    | `getSettings()`                  | PASS / FAIL |         |
+| LSA-04   | Export Schema Integrity    | `exportData()`                   | PASS / FAIL |         |
+| LSA-05   | Malformed Import Rejection | `importData(invalidString)`      | PASS / FAIL |         |
 
-**Overall Status**: [ PASSED (5/5) | FAILED (X/5) ]
+**Overall**: [ PASSED (5/5) | FAILED (X/5) ]
 ```

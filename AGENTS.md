@@ -31,13 +31,13 @@ Entry: `src/main.js`. State: `src/services/todoStore.js`.
 ## Execution Pipeline (Mandatory Order)
 
 Order of execution is mandatory. If any step fails, **HALT**; do not proceed to the next step or propose commits.
+Note: `npm run build`, `npm run format:check`, and `npm run lint:ci` are NOT run on every task; they run during the **Commit Gate** before proposing any commits.
 
-1. **Build Gate** — `vite-build-validator`; exit code 0 within 120s before any other verification.
-2. **Storage Gate** — if `src/services/todoStore.js`, the data model, or settings schema changed → `local-storage-auditor`; 5/5 pass.
-3. **A11y Gate** — if CSS (`src/styles/index.css`), layout, or interactive components changed → `responsive-a11y-auditor`; 6/6 pass.
-4. **Browser Gate** — `ui-browser-verifier`; 7/7 pass with zero blocking findings (0 uncaught exceptions, 0 unhandled rejections, 0 404s).
-5. **Doc Sync Gate** — if files or directories were created, renamed, moved, or deleted → `doc-sync`; 4/4 pass before proposing commits.
-6. **Commit Gate** — see `.agents/rules/01-commit-approval.md` and the `commit-proposer` skill. Never commit without explicit user approval.
+1. **Storage Gate** — if `src/services/todoStore.js`, the data model, or settings schema changed → `local-storage-auditor`; 5/5 pass.
+2. **A11y Gate** — if CSS (`src/styles/index.css`), layout, or interactive components changed → `responsive-a11y-auditor`; 6/6 pass.
+3. **Browser Gate** — `ui-browser-verifier`; 7/7 pass with zero blocking findings (0 uncaught exceptions, 0 unhandled rejections, 0 404s).
+4. **Doc Sync Gate** — if files or directories were created, renamed, moved, or deleted → `doc-sync`; update tree and references.
+5. **Commit Gate (Pre-Commit Verification)** — run `npm run build` (`vite-build-validator`), `npm run format:check`, and `npm run lint:ci` before proposing commits. See `.agents/rules/01-commit-approval.md` and the `commit-proposer` skill. Never commit without explicit user approval.
 
 ---
 

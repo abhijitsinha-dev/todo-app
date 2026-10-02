@@ -1,0 +1,360 @@
+/* ==========================================================================
+   Design System & Tokens — Minimalist Blue & White (Light Version Only)
+   ========================================================================== */
+
+:root {
+  /* Color Palette — Solid Minimalist Blue & White (Zero Linear Gradients) */
+  --bg-page: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --bg-header: #ffffff;
+  --bg-footer: #ffffff;
+
+  --primary-blue: #2563eb;
+  --primary-blue-hover: #1d4ed8;
+  --primary-blue-light: #eff6ff;
+  --primary-blue-border: #bfdbfe;
+
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --text-white: #ffffff;
+
+  --border-color: #e2e8f0;
+  --border-subtle: #f1f5f9;
+
+  /* Elevation Shadows — Crisp, Minimalist */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-header: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  --shadow-footer: 0 -1px 3px 0 rgba(0, 0, 0, 0.05);
+  --shadow-create-btn: 0 4px 10px 0 rgba(37, 99, 235, 0.25);
+
+  /* Typography */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+
+  /* Ergonomics */
+  --touch-target: 44px;
+}
+
+/* ==========================================================================
+   Base & Reset
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   Focus & Accessibility
+   ========================================================================== */
+
+:focus-visible {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+
+/* Interactive target baseline */
+.btn,
+.tab-item,
+.form-input,
+.checkbox-custom,
+.icon-btn {
+  min-height: var(--touch-target);
+  min-width: var(--touch-target);
+}
+
+/* ==========================================================================
+   App Layout Shell
+   ========================================================================== */
+
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-page);
+}
+
+.main-content {
+  flex: 1;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem calc(5.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+/* ==========================================================================
+   Header Component (Mobile-First)
+   ========================================================================== */
+
+.app-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  height: 64px;
+  background-color: var(--bg-header);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-header);
+}
+
+.header-container {
+  height: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.app-logo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  text-decoration: none;
+  color: var(--text-primary);
+  min-height: var(--touch-target);
+  min-width: var(--touch-target);
+  border-radius: var(--radius-md);
+  transition: opacity 0.15s ease;
+}
+
+.app-logo-link:hover {
+  opacity: 0.9;
+}
+
+.logo-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  background-color: var(--primary-blue);
+  color: var(--text-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.app-logo-link:hover .logo-circle {
+  transform: scale(1.04);
+  background-color: var(--primary-blue-hover);
+}
+
+.app-title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.icon-btn.settings-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  min-height: var(--touch-target);
+  min-width: var(--touch-target);
+  border-radius: var(--radius-full);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.settings-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease,
+    background-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.icon-btn.settings-btn:hover .settings-circle,
+.icon-btn.settings-btn.active .settings-circle {
+  border-color: var(--primary-blue);
+  color: var(--primary-blue);
+  background-color: var(--primary-blue-light);
+  transform: rotate(30deg);
+}
+
+/* ==========================================================================
+   Footer Component — Bottom Navigation Bar (Mobile-First)
+   ========================================================================== */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  background-color: var(--bg-footer);
+  border-top: 1px solid var(--border-color);
+  box-shadow: var(--shadow-footer);
+  padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+.bottom-nav-container {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0.375rem 1rem 0;
+  position: relative;
+}
+
+.tab-item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  text-decoration: none;
+  color: var(--text-secondary);
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-md);
+  transition: color 0.15s ease;
+}
+
+.tab-icon-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.tab-item:hover .tab-icon-circle {
+  background-color: var(--primary-blue-light);
+  color: var(--primary-blue);
+}
+
+.tab-item.active {
+  color: var(--primary-blue);
+}
+
+.tab-item.active .tab-icon-circle {
+  background-color: var(--primary-blue-light);
+  color: var(--primary-blue);
+}
+
+.tab-icon-circle.tab-icon-create {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background-color: var(--primary-blue);
+  color: var(--text-white);
+  box-shadow: var(--shadow-create-btn);
+  transition:
+    background-color 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.tab-item:hover .tab-icon-circle.tab-icon-create,
+.tab-item.active .tab-icon-circle.tab-icon-create {
+  background-color: var(--primary-blue-hover);
+  color: var(--text-white);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px 0 rgba(37, 99, 235, 0.35);
+}
+
+.tab-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: inherit;
+  transition: font-weight 0.15s ease;
+}
+
+.tab-item.active .tab-label {
+  font-weight: 600;
+  color: var(--primary-blue);
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+/* Mobile viewports (<= 640px) */
+@media (max-width: 640px) {
+  .header-container,
+  .bottom-nav-container,
+  .main-content {
+    max-width: 100%;
+  }
+
+  .bottom-nav {
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Tablets and larger screens */
+@media (min-width: 641px) {
+  .app-layout {
+    align-items: center;
+  }
+
+  .header-container,
+  .bottom-nav-container,
+  .main-content {
+    max-width: 540px;
+    width: 100%;
+  }
+}
