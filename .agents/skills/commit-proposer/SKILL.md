@@ -30,23 +30,23 @@ Confirm that relevant gates in `.agents/rules/03-execution-pipeline.md` have pas
 - If UI modified: `ui-browser-verifier` passed (7/7).
 
 ### Step 2: Inspect Changes & Formulate Message Options
-1. Run `git status` and `git diff --cached` (or `git diff`) to understand the exact delta.
+1. Run `git status` and `git diff` to inspect unstaged changes. Do **NOT** run `git add` at this stage.
 2. Formulate 1–2 commit messages conforming strictly to `docs/COMMIT_CONVENTION.md`:
    - Header: All lowercase, ≤ 50 characters, no trailing full stop (`.`), one space after colon (`:`).
    - Body & Footer (optional): All lowercase, ≤ 72 characters per line, bullet points (`- `), no trailing full stop.
    - Use recommended types (`feat`, `fix`, `docs`, `chore`, `refactor`, `style`, `test`, `build`, `ci`, `perf`, `revert`), scopes, and emojis.
 
 ### Step 3: Propose to User and Await Approval
-1. Present the proposed commit message(s) clearly in the response.
+1. Present the proposed commit message(s) clearly in the response while changes remain unstaged.
 2. Ask for explicit user approval to execute the commit, or invite revisions.
-3. **DO NOT EXECUTE `git commit` IN THIS TURN.**
+3. **DO NOT EXECUTE `git add` OR `git commit` IN THIS TURN.**
 
 ### Step 4: Iterate or Execute
-- If user requests changes: Formulate revised options and repeat Step 3.
+- If user requests changes: Formulate revised options and repeat Step 3 (keep in revision loop).
 - **ONLY** if the user explicitly approves (e.g. *"approved"*, *"go ahead and commit"*):
-  Execute the commit using `run_command`:
+  Stage and commit using `run_command`:
   ```powershell
-  git commit -m "<approved-header>" -m "<approved-body>"
+  git add -A; git commit -m "<approved-header>" -m "<approved-body>"
   ```
 
 ---
@@ -58,7 +58,7 @@ Confirm that relevant gates in `.agents/rules/03-execution-pipeline.md` have pas
 | **COMMIT-01** | Header Formatting | Message Header | Lowercase, ≤ 50 chars, no trailing period, space after colon |
 | **COMMIT-02** | Body/Footer Formatting | Message Body | Lowercase, ≤ 72 chars/line, bulleted, no trailing period |
 | **COMMIT-03** | Pipeline Verification | Execution Pipeline | Pre-requisite audit & build gates passed prior to proposal |
-| **COMMIT-04** | User Approval Gate | User Interaction | Explicit approval received before `git commit` execution |
+| **COMMIT-04** | Staging & Commit Approval Gate | User Interaction | Zero `git add` or `git commit` run prior to explicit user approval |
 
 ---
 

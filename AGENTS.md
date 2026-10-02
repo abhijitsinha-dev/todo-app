@@ -37,10 +37,11 @@ Order of execution is mandatory. If any step fails, **HALT**; do not proceed to 
 ---
 
 ## Rules (`.agents/rules/`)
-1. `01-commit-approval.md` — never commit autonomously; require explicit approval.
+1. `01-commit-approval.md` — never run git add or git commit without explicit approval; never suggest commit messages without being asked.
 2. `02-commit-convention.md` — enforce `docs/COMMIT_CONVENTION.md` (the single source of truth).
 3. `03-execution-pipeline.md` — the ordered 5-step pipeline above, with strict HALT semantics.
 4. `04-ui-completion-gate.md` — no UI task is "done" until browser verification passes across viewports.
+5. `05-strict-instruction-scope.md` — do nothing without explicit instruction; ask for approval before taking any action beyond user requests.
 
 ---
 
