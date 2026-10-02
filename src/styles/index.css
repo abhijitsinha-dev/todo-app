@@ -1,9 +1,10 @@
 /* ==========================================================================
    Design System & Tokens — Minimalist Blue & White (Light Version Only)
+   Zero Linear Gradients
    ========================================================================== */
 
 :root {
-  /* Color Palette — Solid Minimalist Blue & White (Zero Linear Gradients) */
+  /* Color Palette — Solid Minimalist Blue & White */
   --bg-page: #f8fafc;
   --bg-surface: #ffffff;
   --bg-card: #ffffff;
@@ -16,16 +17,30 @@
   --primary-blue-border: #bfdbfe;
 
   --text-primary: #0f172a;
-  --text-secondary: #64748b;
+  --text-secondary: #475569;
   --text-muted: #94a3b8;
   --text-white: #ffffff;
 
   --border-color: #e2e8f0;
   --border-subtle: #f1f5f9;
 
+  /* Priority Tokens — Solid Accessible Hues (WCAG Contrast >= 4.5:1) */
+  --priority-high-bg: #fef2f2;
+  --priority-high-text: #dc2626;
+  --priority-high-border: #fee2e2;
+
+  --priority-medium-bg: #fffbeb;
+  --priority-medium-text: #b45309;
+  --priority-medium-border: #fef3c7;
+
+  --priority-low-bg: #f0fdf4;
+  --priority-low-text: #15803d;
+  --priority-low-border: #dcfce7;
+
   /* Elevation Shadows — Crisp, Minimalist */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
+  --shadow-card-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
   --shadow-header: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
   --shadow-footer: 0 -1px 3px 0 rgba(0, 0, 0, 0.05);
   --shadow-create-btn: 0 4px 10px 0 rgba(37, 99, 235, 0.25);
@@ -38,6 +53,7 @@
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 14px;
+  --radius-card: 16px;
   --radius-full: 9999px;
 
   /* Ergonomics */
@@ -91,14 +107,14 @@ body {
 .btn,
 .tab-item,
 .form-input,
-.checkbox-custom,
-.icon-btn {
+.icon-btn,
+.todo-check-btn {
   min-height: var(--touch-target);
   min-width: var(--touch-target);
 }
 
 /* ==========================================================================
-   App Layout Shell
+  App Layout Shell
    ========================================================================== */
 
 .app-layout {
@@ -113,11 +129,11 @@ body {
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
-  padding: 1.5rem 1rem calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  padding: 0 1rem calc(5.5rem + env(safe-area-inset-bottom, 0px));
 }
 
 /* ==========================================================================
-   Header Component (Mobile-First)
+  Header Component (Mobile-First)
    ========================================================================== */
 
 .app-header {
@@ -133,13 +149,56 @@ body {
 }
 
 .header-container {
+  position: relative;
   height: 100%;
   max-width: 480px;
   margin: 0 auto;
   padding: 0 1rem;
+  overflow: hidden;
+}
+
+/* Default Header View */
+.header-main-view {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  transition:
+    transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.2s ease;
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Animated Header Search View */
+.header-search-view {
+  position: absolute;
+  inset: 0;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  transition:
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.25s ease;
+  transform: translateX(35px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Search Mode State */
+.app-header.search-mode .header-main-view {
+  transform: translateX(-35px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.app-header.search-mode .header-search-view {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .app-logo-link {
@@ -186,6 +245,14 @@ body {
   color: var(--text-primary);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-btn.search-btn,
+.icon-btn.search-back-btn,
 .icon-btn.settings-btn {
   display: inline-flex;
   align-items: center;
@@ -199,6 +266,8 @@ body {
   cursor: pointer;
 }
 
+.search-circle,
+.back-circle,
 .settings-circle {
   width: 38px;
   height: 38px;
@@ -217,6 +286,14 @@ body {
     transform 0.15s ease;
 }
 
+.icon-btn.search-btn:hover .search-circle,
+.icon-btn.search-btn.active .search-circle,
+.icon-btn.search-back-btn:hover .back-circle {
+  border-color: var(--primary-blue);
+  color: var(--primary-blue);
+  background-color: var(--primary-blue-light);
+}
+
 .icon-btn.settings-btn:hover .settings-circle,
 .icon-btn.settings-btn.active .settings-circle {
   border-color: var(--primary-blue);
@@ -225,8 +302,357 @@ body {
   transform: rotate(30deg);
 }
 
+/* Header Search Input Box */
+.header-search-box {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 42px;
+}
+
+.header-search-icon {
+  position: absolute;
+  left: 0.875rem;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.header-search-input {
+  width: 100%;
+  height: 100%;
+  padding: 0 2.25rem 0 2.4rem;
+  background-color: var(--bg-page);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  font-family: var(--font-family);
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.header-search-input:focus {
+  border-color: var(--primary-blue);
+  background-color: #ffffff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.header-search-clear {
+  position: absolute;
+  right: 0.625rem;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e2e8f0;
+  border: none;
+  border-radius: 50%;
+  color: #475569;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.header-search-clear:hover {
+  background-color: #cbd5e1;
+  color: var(--text-primary);
+}
+
 /* ==========================================================================
-   Footer Component — Bottom Navigation Bar (Mobile-First)
+  Home View & Todo Cards (Matching design/home-ref(mobile).png)
+   ========================================================================== */
+
+.home-view {
+  width: 100%;
+}
+
+/* Filter Bar & Pills */
+.filter-bar {
+  position: sticky;
+  top: 64px;
+  z-index: 30;
+  background-color: var(--bg-page);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -1rem 0.875rem -1rem;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+}
+
+.filter-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 1.15rem;
+  min-height: 44px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-family);
+  font-size: 0.84rem;
+  font-weight: 500;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.filter-pill:hover {
+  background-color: var(--primary-blue-light);
+  color: var(--primary-blue);
+  border-color: var(--primary-blue-border);
+}
+
+.filter-pill.active {
+  background-color: var(--primary-blue);
+  color: var(--text-white);
+  border-color: var(--primary-blue);
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.75rem 1.25rem;
+  text-align: center;
+  background-color: var(--bg-card);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-card);
+}
+
+.empty-state-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state-title {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.empty-state-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  max-width: 280px;
+}
+
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  padding-top: 0.25rem;
+}
+
+/* Todo Card Item */
+.todo-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  padding: 1rem 1.125rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  box-shadow: var(--shadow-card);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.todo-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: var(--shadow-card-hover);
+}
+
+.todo-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.todo-title {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-primary);
+  word-break: break-word;
+  transition: color 0.15s ease;
+}
+
+.todo-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.175rem 0.55rem;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-transform: capitalize;
+  line-height: 1.2;
+}
+
+.priority-badge.priority-high {
+  background-color: var(--priority-high-bg);
+  color: var(--priority-high-text);
+  border: 1px solid var(--priority-high-border);
+}
+
+.priority-badge.priority-medium {
+  background-color: var(--priority-medium-bg);
+  color: var(--priority-medium-text);
+  border: 1px solid var(--priority-medium-border);
+}
+
+.priority-badge.priority-low {
+  background-color: var(--priority-low-bg);
+  color: var(--priority-low-text);
+  border: 1px solid var(--priority-low-border);
+}
+
+.category-badge {
+  background-color: var(--border-subtle);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+/* Todo Checkbox Action Button */
+.todo-check-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+
+.checkbox-custom {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  min-height: 18px;
+  border-radius: 5px;
+  border: 1.5px solid #cbd5e1;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  flex-shrink: 0;
+  pointer-events: none;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.todo-check-btn:hover .checkbox-custom {
+  border-color: var(--primary-blue);
+  background-color: var(--primary-blue-light);
+}
+
+.todo-check-btn:active .checkbox-custom {
+  transform: scale(0.92);
+}
+
+/* Completed State */
+.todo-card.completed {
+  background-color: #fafbfd;
+  border-color: #e2e8f0;
+  opacity: 0.85;
+}
+
+.todo-card.completed .todo-title {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.todo-card.completed .checkbox-custom,
+.todo-check-btn.checked .checkbox-custom {
+  background-color: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: #ffffff;
+}
+
+.check-icon {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.2s ease;
+}
+
+/* ==========================================================================
+  Placeholder Pages (Create Page, Stats Page, Settings Page)
+   ========================================================================== */
+
+.placeholder-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 55vh;
+  text-align: center;
+  padding: 2rem 1rem;
+  margin-top: 1.25rem;
+  background-color: var(--bg-card);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-card);
+}
+
+.placeholder-title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.placeholder-desc {
+  font-size: 0.925rem;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+  Footer Component — Bottom Navigation Bar (Mobile-First)
    ========================================================================== */
 
 .bottom-nav {
@@ -329,7 +755,7 @@ body {
 }
 
 /* ==========================================================================
-   Responsive Breakpoints
+  Responsive Breakpoints
    ========================================================================== */
 
 /* Mobile viewports (<= 640px) */
@@ -338,6 +764,10 @@ body {
   .bottom-nav-container,
   .main-content {
     max-width: 100%;
+  }
+
+  .todo-card {
+    padding: 0.875rem 1rem;
   }
 
   .bottom-nav {
@@ -354,7 +784,7 @@ body {
   .header-container,
   .bottom-nav-container,
   .main-content {
-    max-width: 540px;
+    max-width: 520px;
     width: 100%;
   }
 }

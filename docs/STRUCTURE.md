@@ -36,7 +36,8 @@ todo-app/
 │   ├── extensions.json                    # Recommended workspace extensions (Prettier, ESLint)
 │   └── settings.json                      # Workspace editor formatting & linting defaults
 ├── design/                                # Design wireframes and reference assets
-│   └── header-footer-ref.png              # Mobile-first header and footer wireframe
+│   ├── header-footer-ref.png              # Mobile-first header and footer wireframe
+│   └── home-ref(mobile).png               # Mobile-first home view and card wireframe
 ├── docs/                                  # Project documentation
 │   ├── COMMIT_CONVENTION.md               # Git commit convention guidelines & examples
 │   ├── PLAN.md                            # Comprehensive architectural and execution plan
