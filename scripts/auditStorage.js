@@ -32,10 +32,16 @@ async function runAudit() {
     const module = await import('../src/services/todoStore.js');
     todoStore = module.todoStore || module.default || module;
   } catch (err) {
-    console.log(JSON.stringify({
-      status: 'CRITICAL_ERROR',
-      message: 'Could not load src/services/todoStore.js: ' + err.message
-    }, null, 2));
+    console.log(
+      JSON.stringify(
+        {
+          status: 'CRITICAL_ERROR',
+          message: 'Could not load src/services/todoStore.js: ' + err.message
+        },
+        null,
+        2
+      )
+    );
     process.exit(1);
   }
 
@@ -52,7 +58,13 @@ async function runAudit() {
       details: isArray ? 'Returned empty array fallback []' : 'Failed to return array'
     });
   } catch (e) {
-    results.push({ id: 'LSA-01', name: 'Default Empty Fallback', target: 'getAllTodos()', pass: false, details: e.message });
+    results.push({
+      id: 'LSA-01',
+      name: 'Default Empty Fallback',
+      target: 'getAllTodos()',
+      pass: false,
+      details: e.message
+    });
   }
 
   // Check LSA-02: Corrupted JSON recovery
@@ -65,17 +77,26 @@ async function runAudit() {
       name: 'Corrupted JSON Recovery',
       target: 'localStorage["todo_app_todos"]',
       pass: recovered,
-      details: recovered ? 'Caught JSON error without throwing and fell back safely' : 'Threw exception or invalid type'
+      details: recovered
+        ? 'Caught JSON error without throwing and fell back safely'
+        : 'Threw exception or invalid type'
     });
   } catch (e) {
-    results.push({ id: 'LSA-02', name: 'Corrupted JSON Recovery', target: 'getAllTodos()', pass: false, details: 'Threw exception: ' + e.message });
+    results.push({
+      id: 'LSA-02',
+      name: 'Corrupted JSON Recovery',
+      target: 'getAllTodos()',
+      pass: false,
+      details: 'Threw exception: ' + e.message
+    });
   }
 
   // Check LSA-03: Settings Default Schema
   try {
     localStorage.clear();
     const settings = todoStore.getSettings ? todoStore.getSettings() : null;
-    const isExactDefault = settings &&
+    const isExactDefault =
+      settings &&
       settings.theme === 'dark' &&
       settings.soundEnabled === true &&
       settings.notificationsEnabled === false &&
@@ -90,7 +111,13 @@ async function runAudit() {
         : 'Settings object did not match exact default schema: ' + JSON.stringify(settings)
     });
   } catch (e) {
-    results.push({ id: 'LSA-03', name: 'Settings Default Schema', target: 'getSettings()', pass: false, details: e.message });
+    results.push({
+      id: 'LSA-03',
+      name: 'Settings Default Schema',
+      target: 'getSettings()',
+      pass: false,
+      details: e.message
+    });
   }
 
   // Check LSA-04: Export Schema Integrity
@@ -113,10 +140,18 @@ async function runAudit() {
       name: 'Export Schema Integrity',
       target: 'exportData()',
       pass: !!validExport,
-      details: validExport ? `Export includes version ${parsed.version} and todos array (${parsed.todos.length} items)` : 'Missing version or todos array'
+      details: validExport
+        ? `Export includes version ${parsed.version} and todos array (${parsed.todos.length} items)`
+        : 'Missing version or todos array'
     });
   } catch (e) {
-    results.push({ id: 'LSA-04', name: 'Export Schema Integrity', target: 'exportData()', pass: false, details: e.message });
+    results.push({
+      id: 'LSA-04',
+      name: 'Export Schema Integrity',
+      target: 'exportData()',
+      pass: false,
+      details: e.message
+    });
   }
 
   // Check LSA-05: Malformed Import Rejection
@@ -128,10 +163,18 @@ async function runAudit() {
       name: 'Malformed Import Rejection',
       target: 'importData(invalidString)',
       pass: !!rejectedSafely,
-      details: rejectedSafely ? 'Cleanly returned { success: false } with error message' : 'Failed to reject invalid JSON properly'
+      details: rejectedSafely
+        ? 'Cleanly returned { success: false } with error message'
+        : 'Failed to reject invalid JSON properly'
     });
   } catch (e) {
-    results.push({ id: 'LSA-05', name: 'Malformed Import Rejection', target: 'importData()', pass: false, details: 'Unhandled exception thrown: ' + e.message });
+    results.push({
+      id: 'LSA-05',
+      name: 'Malformed Import Rejection',
+      target: 'importData()',
+      pass: false,
+      details: 'Unhandled exception thrown: ' + e.message
+    });
   }
 
   console.log(JSON.stringify(results, null, 2));

@@ -3,13 +3,13 @@ export default {
   parserPreset: {
     parserOpts: {
       headerPattern: /^(\w+)(?:\(([^)]+)\))?!?:(?:\s*)(.+)$/,
-      headerCorrespondence: ['type', 'scope', 'subject'],
-    },
+      headerCorrespondence: ['type', 'scope', 'subject']
+    }
   },
   plugins: [
     {
       rules: {
-        'header-no-uppercase': (parsed) => {
+        'header-no-uppercase': parsed => {
           const { raw } = parsed;
           const header = (raw || '').split(/\r?\n/)[0];
           if (/[A-Z]/.test(header)) {
@@ -17,9 +17,9 @@ export default {
           }
           return [true];
         },
-        'no-trailing-period': (parsed) => {
+        'no-trailing-period': parsed => {
           const { raw } = parsed;
-          const lines = (raw || '').split(/\r?\n/).filter((l) => l.trim().length > 0);
+          const lines = (raw || '').split(/\r?\n/).filter(l => l.trim().length > 0);
           for (let i = 0; i < lines.length; i++) {
             if (lines[i].trim().endsWith('.')) {
               return [false, `line ${i + 1} must not end with a full stop (.)`];
@@ -27,7 +27,7 @@ export default {
           }
           return [true];
         },
-        'colon-space-check': (parsed) => {
+        'colon-space-check': parsed => {
           const { raw } = parsed;
           const header = (raw || '').split(/\r?\n/)[0];
           if (header.includes(':')) {
@@ -38,36 +38,27 @@ export default {
           }
           return [true];
         },
-        'body-footer-lowercase': (parsed) => {
+        'body-footer-lowercase': parsed => {
           const { raw } = parsed;
-          const lines = (raw || '').split(/\r?\n/).slice(1).filter((l) => l.trim().length > 0);
+          const lines = (raw || '')
+            .split(/\r?\n/)
+            .slice(1)
+            .filter(l => l.trim().length > 0);
           for (let i = 0; i < lines.length; i++) {
             if (/[A-Z]/.test(lines[i])) {
               return [false, `body/footer line ${i + 1} must contain only lowercase letters`];
             }
           }
           return [true];
-        },
-      },
-    },
+        }
+      }
+    }
   ],
   rules: {
     'type-enum': [
       2,
       'always',
-      [
-        'feat',
-        'fix',
-        'docs',
-        'style',
-        'refactor',
-        'perf',
-        'test',
-        'build',
-        'ci',
-        'chore',
-        'revert',
-      ],
+      ['feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'build', 'ci', 'chore', 'revert']
     ],
     'type-case': [2, 'always', 'lower-case'],
     'header-max-length': [2, 'always', 50],
@@ -78,6 +69,6 @@ export default {
     'header-no-uppercase': [2, 'always'],
     'no-trailing-period': [2, 'always'],
     'body-footer-lowercase': [2, 'always'],
-    'colon-space-check': [1, 'always'],
-  },
+    'colon-space-check': [1, 'always']
+  }
 };

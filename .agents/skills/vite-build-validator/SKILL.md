@@ -8,6 +8,7 @@ description: >-
 # Vite Build Validator Skill
 
 ## 1. Ownership & Scope
+
 - **OWNED BY THIS SKILL**:
   - Compiling production assets with `npm run build` using `run_command`.
   - Detecting unresolved module imports, broken paths, circular dependencies, and syntax errors.
@@ -20,7 +21,9 @@ description: >-
 ---
 
 ## 2. Preconditions
+
 Before executing build validation, verify that:
+
 1. `package.json` exists in the workspace root and defines a `build` script.
 2. `node_modules` is installed and up to date.
 
@@ -29,13 +32,17 @@ Before executing build validation, verify that:
 ## 3. Execution Procedure
 
 ### Step 1: Execute Production Build Command
+
 Run the build command using `run_command`:
+
 ```powershell
 npm run build
 ```
+
 - **Timeout Guard**: If the build process does not complete within 120 seconds, terminate the command and record `VBV-00: build timeout` as `FAIL`.
 
 ### Step 2: Parse and Verify Output
+
 1. Check exit code: Must be `0`.
 2. Check stdout for Vite build summary:
    - Confirm `dist/index.html` is emitted.
@@ -48,19 +55,20 @@ npm run build
 
 ## 3. Testable Success Criteria
 
-| Check ID | Verification Item | Success Criteria |
-| :--- | :--- | :--- |
-| **VBV-00** | Execution Timeout | Process finishes in ≤ 120 seconds |
-| **VBV-01** | Process Exit Code | Exits with code `0` |
-| **VBV-02** | Asset Emission | Generates `dist/index.html` and bundled JS/CSS in `dist/assets/` |
+| Check ID   | Verification Item | Success Criteria                                                    |
+| :--------- | :---------------- | :------------------------------------------------------------------ |
+| **VBV-00** | Execution Timeout | Process finishes in ≤ 120 seconds                                   |
+| **VBV-01** | Process Exit Code | Exits with code `0`                                                 |
+| **VBV-02** | Asset Emission    | Generates `dist/index.html` and bundled JS/CSS in `dist/assets/`    |
 | **VBV-03** | Module Resolution | Zero missing module import errors (e.g. `Failed to resolve import`) |
-| **VBV-04** | Syntax & Parsing | Zero syntax errors, unexpected tokens, or unresolved variables |
+| **VBV-04** | Syntax & Parsing  | Zero syntax errors, unexpected tokens, or unresolved variables      |
 
 ---
 
 ## 4. Failure Branch
 
 If the build command fails (exit code `!= 0` or timeout):
+
 1. **HALT**: Stop immediately. Do NOT launch the browser or propose commits.
 2. **ISOLATE**: Parse the compiler error message to extract the exact filename and line number:
    ```
@@ -78,13 +86,13 @@ The agent must output a structured build report in this exact format:
 ```markdown
 ### 🛠️ Vite Build Validation Report
 
-| Check ID | Item | Result | Output Summary |
-| :--- | :--- | :--- | :--- |
-| VBV-00 | Execution Timeout (<= 120s) | PASS / FAIL | Finished in <X>s |
-| VBV-01 | Exit Code | PASS / FAIL | Code 0 |
-| VBV-02 | Asset Emission | PASS / FAIL | Emitted `dist/` bundle |
-| VBV-03 | Module Resolution | PASS / FAIL | Zero unresolved imports |
-| VBV-04 | Syntax Check | PASS / FAIL | Clean ES module compilation |
+| Check ID | Item                        | Result      | Output Summary              |
+| :------- | :-------------------------- | :---------- | :-------------------------- |
+| VBV-00   | Execution Timeout (<= 120s) | PASS / FAIL | Finished in <X>s            |
+| VBV-01   | Exit Code                   | PASS / FAIL | Code 0                      |
+| VBV-02   | Asset Emission              | PASS / FAIL | Emitted `dist/` bundle      |
+| VBV-03   | Module Resolution           | PASS / FAIL | Zero unresolved imports     |
+| VBV-04   | Syntax Check                | PASS / FAIL | Clean ES module compilation |
 
 - **Bundle Artifacts**: `dist/index.html` (<size>), `dist/assets/*.js` (<size>), `dist/assets/*.css` (<size>)
 - **Diagnostics**: Non-fatal warnings logged if present (non-blocking)

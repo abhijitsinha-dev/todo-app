@@ -1,6 +1,7 @@
 # Todo App — Comprehensive Project Plan
 
 ## 1. Project Overview
+
 A modern, ultra-responsive Todo Web Application built using **Vite** and **Vanilla JavaScript** (ES6+ Modules) with zero external CSS frameworks. The app offers advanced task scheduling, due dates, reminder popups, priority management, subtask checklists, and a daily completion analytics dashboard.
 
 ---
@@ -8,14 +9,16 @@ A modern, ultra-responsive Todo Web Application built using **Vite** and **Vanil
 ## 2. Key Requirements & Architectural Decisions
 
 ### A. Navigation & Routing
+
 - **Architecture**: Single Page Application (SPA) with Hash-based routing (`#/`, `#/create`, `#/stats`, `#/todo/:id`).
-- **Tab Sequence (Strict)**: 
+- **Tab Sequence (Strict)**:
   1. **Home** (`#/` or `#/home`)
   2. **Create** (`#/create`)
   3. **Stats** (`#/stats`)
 - **Detail View**: Dedicated full-page route (`#/todo/:id`) opened by clicking a todo on the Home view, featuring full details, subtask progress, and in-place editing/deletion.
 
 ### B. Tab Features
+
 1. **Home Tab**:
    - **Default View**: Displays only upcoming, unfinished tasks scheduled for **Today**.
    - **Filter Pills**: `Today` (default), `Upcoming (Future)`, `Completed`, `All`.
@@ -42,16 +45,18 @@ A modern, ultra-responsive Todo Web Application built using **Vite** and **Vanil
      - 7-day completion activity overview.
 
 ### C. Reminder & Notification System
+
 - **Hybrid Alerting**:
   - **In-App Popup Modal**: Floating glassmorphism dialog showing task title, due countdown, and quick actions:
-    - *Mark Complete*
-    - *Snooze 10m*
-    - *Dismiss*
+    - _Mark Complete_
+    - _Snooze 10m_
+    - _Dismiss_
   - **Audio Effects**: Synthesized alert chime powered by the Web Audio API (zero external audio file dependencies).
   - **Native Browser Notifications**: Fires standard Web Notifications if permission is granted by the user.
 - **Background Engine**: Periodic checking interval (every 15s) scanning upcoming reminders and tracking triggered state to prevent duplicates.
 
 ### D. Multi-Device Responsiveness
+
 - **Desktop & Laptop (1025px+)**: Centered container (max 1080px), sleek top navbar with glowing brand logo, multi-column dashboard grid.
 - **Tablets & iPad (641px - 1024px)**: Adaptive two-column layouts, touch-friendly touch targets, flexible content cards.
 - **Mobile Phones (iPhone & Android: ≤640px)**:
@@ -61,6 +66,7 @@ A modern, ultra-responsive Todo Web Application built using **Vite** and **Vanil
   - iOS safe-area-inset padding for notches and home indicators.
 
 ### E. Settings & Customization
+
 - **Top-Right Settings Icon (⚙️)**: Located in the top-right corner across all screens, with a subtle hover/focus animation, linking to `#/settings`.
 - **Navigation Behavior**: Hash-based route `#/settings`. The main navigation tabs (`Home`, `Create`, `Stats`) remain accessible, and the Settings view includes a prominent "← Back" button to return to the prior tab.
 - **Settings Features**:
@@ -68,9 +74,9 @@ A modern, ultra-responsive Todo Web Application built using **Vite** and **Vanil
   2. **Audio & Sound Effects**: Toggle switch to enable/disable sound effects (completion chime & reminder alert), plus a "Test Sound" button to sample the Web Audio API melody.
   3. **Notification Preferences**: Browser notification status indicator (`Granted`, `Default`, `Denied`) with a "Request Permission" button, plus default reminder timing preference.
   4. **Data Management**:
-     - *Export Tasks (JSON)*: Instant download of all todos and settings.
-     - *Import Tasks (JSON)*: File upload to restore todos.
-     - *Reset All Data*: Danger zone action protected by a dedicated confirmation modal dialog before wiping data.
+     - _Export Tasks (JSON)_: Instant download of all todos and settings.
+     - _Import Tasks (JSON)_: File upload to restore todos.
+     - _Reset All Data_: Danger zone action protected by a dedicated confirmation modal dialog before wiping data.
 
 ---
 
