@@ -85,60 +85,10 @@ A modern, ultra-responsive Todo Web Application built using **Vite** and **Vanil
 Adheres to a **layered architecture with camelCase filenames**:
 
 > [!NOTE]
-> See `AGENTS.md` for the live, canonical source of project rules, skills inventory, and execution pipeline gates.
+> The canonical and exhaustive repository directory tree is maintained in [`docs/STRUCTURE.md`](STRUCTURE.md).
+> See [`AGENTS.md`](../AGENTS.md) for the live, canonical source of project rules, skills inventory, and execution pipeline gates.
 
-```
-todo-app/
-├── .agents/
-│   ├── rules/
-│   │   ├── 01-commit-approval.md        # Core invariant: never commit autonomously
-│   │   ├── 02-commit-convention.md      # Requires conformance to docs/COMMIT_CONVENTION.md
-│   │   ├── 03-execution-pipeline.md     # Ordered 5-step pipeline with strict HALT semantics
-│   │   └── 04-ui-completion-gate.md     # Prohibits declaring UI done until verified
-│   └── skills/
-│       ├── commit-proposer/             # Inspects diffs, proposes messages, awaits approval
-│       ├── local-storage-auditor/       # Schema validation & backup integrity checks
-│       ├── responsive-a11y-auditor/     # Touch target (>=44px) & accessibility checks
-│       ├── ui-browser-verifier/         # Multi-device browser verification workflow
-│       └── vite-build-validator/        # Pre-flight build compilation validator
-├── .husky/                              # Git lifecycle hooks
-│   ├── commit-msg                       # Validates commit format via commitlint
-│   ├── pre-commit                       # Runs npm run build before commit
-│   ├── pre-push                         # Validates build before push
-│   └── post-commit                      # Logs commit confirmation
-├── docs/                                # Project documentation
-│   ├── COMMIT_CONVENTION.md             # Git commit convention guidelines & examples
-│   └── PLAN.md                          # Comprehensive architectural and execution plan (this file)
-├── public/                              # Static public assets and favicons
-├── scripts/                             # Helper scripts (auditStorage.js, postPush.js)
-├── src/                                 # Application source code
-│   ├── main.js                          # Main application initializer & background jobs
-│   ├── router.js                        # Hash router (#/, #/create, #/stats, #/todo/:id, #/settings)
-│   ├── services/
-│   │   ├── todoStore.js                 # LocalStorage CRUD, filters, metrics, backup/restore, settings store
-│   │   ├── reminderService.js           # Background interval checking reminders, triggering modal & sound
-│   │   └── audioService.js              # Web Audio API sound synthesizers (chime & alert)
-│   ├── components/
-│   │   ├── navBar.js                    # Top header with logo & Settings icon, plus mobile bottom nav
-│   │   ├── todoCard.js                  # Home list card component (title, priority, quick complete)
-│   │   ├── filterBar.js                 # Filter pills (Today, Upcoming, Completed, All) & search input
-│   │   ├── reminderModal.js             # In-app popup modal for triggered reminders
-│   │   └── confirmModal.js              # Modal dialog for critical actions (delete todo, reset all data)
-│   ├── views/
-│   │   ├── homeView.js                  # Home tab: Today's upcoming tasks, filter controls, search
-│   │   ├── createView.js                # Create tab: Full task creation form with subtasks & reminders
-│   │   ├── statsView.js                 # Stats tab: Daily scheduled vs completed tracker, meters, charts
-│   │   ├── detailView.js                # Dedicated Detail page: Full info, subtask checklist, edit & delete
-│   │   └── settingsView.js              # Settings page: Dark/light, audio toggle, notifications, data export/import/reset
-│   └── styles/
-│       └── index.css                    # Complete CSS design system, variables, glassmorphism, responsive queries
-├── AGENTS.md                            # Workspace root agent guidelines linking active skills & rules
-├── commitlint.config.js                 # Commitlint configuration enforcing convention
-├── index.html                           # HTML entry point with meta tags & Google fonts
-├── package.json                         # Project configuration & Vite scripts
-├── README.md                            # Project overview & documentation
-└── vite.config.js                       # Vite bundler configuration
-```
+For the complete file inventory, folder hierarchy, and layer responsibilities, refer to [`docs/STRUCTURE.md`](STRUCTURE.md).
 
 ---
 

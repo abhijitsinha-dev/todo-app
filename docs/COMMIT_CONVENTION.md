@@ -25,13 +25,13 @@ type(scope): [emoji] message header
 
 ### Header
 
-- **All lowercase letters**
+- **Lowercase letters** (uppercase allowed only for filenames that are uppercase, e.g. `docs/STRUCTURE.md`, `README.md`)
 - **No full stop at the end**
 - **Maximum 50 characters**
 
 ### Body & Footer (optional)
 
-- **All lowercase letters**
+- **Lowercase letters** (uppercase allowed only for filenames that are uppercase, e.g. `docs/STRUCTURE.md`, `README.md`)
 - **Each point on a new line**
 - **No trailing punctuation (like full stops)**
 - **Maximum 72 characters per line**
@@ -45,7 +45,6 @@ type(scope): [emoji] message header
 ### ✅ Validation Rules
 
 - ❌ **error** if type is invalid
-- ❌ **error** if header has uppercase letters
 - ❌ **error** if any line ends with a full stop (`.`)
 - ⚠️ **warning** if no space after colon
 
@@ -53,6 +52,7 @@ type(scope): [emoji] message header
 
 - It is recommended to use the mentioned scopes and emoji
 - No error or warning for omitting scope or emoji
+- **Filename Casing**: Uppercase should only be used if the file name itself is in uppercase (e.g. `docs/STRUCTURE.md`, `README.md`, `docs/PLAN.md`, `AGENTS.md`). All standard prose, descriptions, types, and scopes should remain in lowercase
 
 ---
 

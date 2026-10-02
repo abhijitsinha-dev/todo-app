@@ -13,4 +13,4 @@ activation: always-on
   - Propose commit message options to the user while changes remain unstaged.
   - Keep in a revision loop if the user suggests changes until the message is explicitly approved.
   - **ONLY** after explicit approval of the message, execute both `git add` and `git commit`.
-- Commit messages must strictly conform to `docs/COMMIT_CONVENTION.md`.
+- Commit messages must strictly conform to `docs/COMMIT_CONVENTION.md` (uppercase is permitted only for filenames that are also uppercase, e.g. `docs/STRUCTURE.md` or `README.md`).

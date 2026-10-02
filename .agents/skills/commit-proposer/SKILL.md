@@ -36,9 +36,10 @@ Confirm that relevant gates in `.agents/rules/03-execution-pipeline.md` have pas
 
 1. Run `git status` and `git diff` to inspect unstaged changes. Do **NOT** run `git add` at this stage.
 2. Formulate 1–2 commit messages conforming strictly to `docs/COMMIT_CONVENTION.md`:
-   - Header: All lowercase, ≤ 50 characters, no trailing full stop (`.`), one space after colon (`:`).
-   - Body & Footer (optional): All lowercase, ≤ 72 characters per line, bullet points (`- `), no trailing full stop.
+   - Header: Lowercase (uppercase permitted only for uppercase filenames like `README.md` or `docs/STRUCTURE.md`), ≤ 50 characters, no trailing full stop (`.`), one space after colon (`:`).
+   - Body & Footer (optional): Lowercase (uppercase permitted only for uppercase filenames), ≤ 72 characters per line, bullet points (`- `), no trailing full stop.
    - Use recommended types (`feat`, `fix`, `docs`, `chore`, `refactor`, `style`, `test`, `build`, `ci`, `perf`, `revert`), scopes, and emojis.
+   - Filename Casing Recommendation: Only use uppercase if the referenced file name is also in uppercase.
 
 ### Step 3: Propose to User and Await Approval
 
@@ -59,12 +60,12 @@ Confirm that relevant gates in `.agents/rules/03-execution-pipeline.md` have pas
 
 ## 3. Testable Success Criteria
 
-| Check ID      | Verification Item              | Target             | Success Criteria                                                   |
-| :------------ | :----------------------------- | :----------------- | :----------------------------------------------------------------- |
-| **COMMIT-01** | Header Formatting              | Message Header     | Lowercase, ≤ 50 chars, no trailing period, space after colon       |
-| **COMMIT-02** | Body/Footer Formatting         | Message Body       | Lowercase, ≤ 72 chars/line, bulleted, no trailing period           |
-| **COMMIT-03** | Pipeline Verification          | Execution Pipeline | Pre-requisite audit & build gates passed prior to proposal         |
-| **COMMIT-04** | Staging & Commit Approval Gate | User Interaction   | Zero `git add` or `git commit` run prior to explicit user approval |
+| Check ID      | Verification Item              | Target             | Success Criteria                                                                 |
+| :------------ | :----------------------------- | :----------------- | :------------------------------------------------------------------------------- |
+| **COMMIT-01** | Header Formatting              | Message Header     | Lowercase (uppercase only for uppercase filenames), ≤ 50 chars, no period, space |
+| **COMMIT-02** | Body/Footer Formatting         | Message Body       | Lowercase (uppercase only for uppercase filenames), ≤ 72 chars/line, no period   |
+| **COMMIT-03** | Pipeline Verification          | Execution Pipeline | Pre-requisite audit & build gates passed prior to proposal                       |
+| **COMMIT-04** | Staging & Commit Approval Gate | User Interaction   | Zero `git add` or `git commit` run prior to explicit user approval               |
 
 ---
 

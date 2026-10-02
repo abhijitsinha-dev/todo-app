@@ -46,58 +46,16 @@ This application goes far beyond basic CRUD with specialized scheduling, reminde
 
 ## 📁 Project Architecture
 
-```
-todo-app/
-├── .agents/                             # Agent automation skills and rules
-│   ├── rules/
-│   │   ├── 01-commit-approval.md        # Core invariant: never commit autonomously
-│   │   ├── 02-commit-convention.md      # Requires conformance to docs/COMMIT_CONVENTION.md
-│   │   ├── 03-execution-pipeline.md     # Ordered 5-step pipeline with strict HALT semantics
-│   │   └── 04-ui-completion-gate.md     # Prohibits declaring UI done until verified
-│   └── skills/
-│       ├── commit-proposer/             # Inspects diffs, proposes messages, awaits approval
-│       ├── local-storage-auditor/       # Schema validation & backup integrity checks
-│       ├── responsive-a11y-auditor/     # Touch target (>=44px) & accessibility checks
-│       ├── ui-browser-verifier/         # Multi-device browser verification workflow
-│       └── vite-build-validator/        # Pre-flight build compilation validator
-├── .husky/                              # Git lifecycle hooks
-│   ├── commit-msg                       # Validates commit format via commitlint
-│   ├── pre-commit                       # Runs npm run build before commit
-│   ├── pre-push                         # Validates build before push
-│   └── post-commit                      # Logs commit confirmation
-├── docs/                                # Project documentation
-│   ├── COMMIT_CONVENTION.md             # Git commit convention guidelines & examples
-│   └── PLAN.md                          # Comprehensive architectural and execution plan
-├── public/                              # Static public assets and favicons
-├── scripts/                             # Helper scripts (e.g. post-push automation)
-├── src/                                 # Application source code
-│   ├── main.js                          # App initialization, routing & background intervals
-│   ├── router.js                        # Client-side SPA hash router
-│   ├── services/
-│   │   ├── todoStore.js                 # LocalStorage CRUD, filters, metrics, backup/restore
-│   │   ├── reminderService.js           # Periodic reminder checker & notification engine
-│   │   └── audioService.js              # Web Audio API synthesizers (chime & alerts)
-│   ├── components/
-│   │   ├── navBar.js                    # Top desktop header & bottom mobile tab navigation
-│   │   ├── todoCard.js                  # Home view task card component
-│   │   ├── filterBar.js                 # Filter pills & search input
-│   │   ├── reminderModal.js             # In-app alert popup modal
-│   │   └── confirmModal.js              # Confirmation dialog for critical actions
-│   ├── views/
-│   │   ├── homeView.js                  # Home view (today's tasks, filters, search)
-│   │   ├── createView.js                # Task creation form with subtasks & reminders
-│   │   ├── statsView.js                 # Daily tasks scheduled vs. completed analytics
-│   │   ├── detailView.js                # Full task detail view with subtask checklist
-│   │   └── settingsView.js              # Settings view (theme, audio, data management)
-│   └── styles/
-│       └── index.css                    # Design tokens, themes, glassmorphism, responsive queries
-├── AGENTS.md                            # Workspace agent guidelines linking active skills & rules
-├── commitlint.config.js                 # Commitlint configuration enforcing convention
-├── index.html                           # HTML entry point with meta tags & typography
-├── package.json                         # Project dependencies, scripts & metadata
-├── README.md                            # Project overview & documentation (this file)
-└── vite.config.js                       # Vite build configuration
-```
+The application is structured into decoupled Vanilla JavaScript ES6 modules with clean layer boundaries and zero UI framework overhead.
+
+📖 **The complete, canonical folder structure and file inventory is documented in [`docs/STRUCTURE.md`](docs/STRUCTURE.md).**
+
+### Architectural Highlights:
+
+- **`src/`**: Application source code organized into views (`views/`), reusable components (`components/`), storage & audio services (`services/`), and design tokens (`styles/index.css`).
+- **`docs/`**: Project documentation, including the [Git Commit Convention](docs/COMMIT_CONVENTION.md), [Architectural Plan](docs/PLAN.md), and [Directory Structure](docs/STRUCTURE.md).
+- **`.agents/`**: Autonomous development rules (`rules/`) and verification skills (`skills/`).
+- **`.husky/` & `.github/`**: Local git lifecycle hooks and automated GitHub Pages deployment workflow.
 
 ---
 
@@ -164,12 +122,13 @@ type(scope): [emoji] message header
 - **Emoji**: Recommended (e.g. `✨` for feat, `🐛` for fix, `♻️` for chore), but optional.
 - **Colon Spacing**: Single space after `:` recommended (triggers warning if omitted, non-blocking).
 
-📖 For full tables of types, scopes, and examples, see [`docs/COMMIT_CONVENTION.md`](file:///c:/Users/abhij/Desktop/todo-app/docs/COMMIT_CONVENTION.md).
+📖 For full tables of types, scopes, and examples, see [`docs/COMMIT_CONVENTION.md`](docs/COMMIT_CONVENTION.md).
 
 ---
 
 ## 📚 Further Documentation
 
-- **[Architectural Plan & Specifications](file:///c:/Users/abhij/Desktop/todo-app/docs/PLAN.md)**: Detailed feature breakdown, data models, and responsive design specs.
-- **[Git Commit Convention Guide](file:///c:/Users/abhij/Desktop/todo-app/docs/COMMIT_CONVENTION.md)**: Standardized commit guide for all contributors.
-- **[Agent Guidelines & Verification Rules](file:///c:/Users/abhij/Desktop/todo-app/AGENTS.md)**: Autonomous agent verification workflows and skills.
+- **[Directory & File Structure](docs/STRUCTURE.md)**: Exhaustive repository tree, module breakdowns, and file responsibilities.
+- **[Architectural Plan & Specifications](docs/PLAN.md)**: Detailed feature breakdown, data models, and responsive design specs.
+- **[Git Commit Convention Guide](docs/COMMIT_CONVENTION.md)**: Standardized commit guide for all contributors.
+- **[Agent Guidelines & Verification Rules](AGENTS.md)**: Autonomous agent verification workflows and skills.

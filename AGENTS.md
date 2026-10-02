@@ -36,7 +36,8 @@ Order of execution is mandatory. If any step fails, **HALT**; do not proceed to 
 2. **Storage Gate** — if `src/services/todoStore.js`, the data model, or settings schema changed → `local-storage-auditor`; 5/5 pass.
 3. **A11y Gate** — if CSS (`src/styles/index.css`), layout, or interactive components changed → `responsive-a11y-auditor`; 6/6 pass.
 4. **Browser Gate** — `ui-browser-verifier`; 7/7 pass with zero blocking findings (0 uncaught exceptions, 0 unhandled rejections, 0 404s).
-5. **Commit Gate** — see `.agents/rules/01-commit-approval.md` and the `commit-proposer` skill. Never commit without explicit user approval.
+5. **Doc Sync Gate** — if files or directories were created, renamed, moved, or deleted → `doc-sync`; 4/4 pass before proposing commits.
+6. **Commit Gate** — see `.agents/rules/01-commit-approval.md` and the `commit-proposer` skill. Never commit without explicit user approval.
 
 ---
 
@@ -44,16 +45,19 @@ Order of execution is mandatory. If any step fails, **HALT**; do not proceed to 
 
 1. `01-commit-approval.md` — never run git add or git commit without explicit approval; never suggest commit messages without being asked.
 2. `02-commit-convention.md` — enforce `docs/COMMIT_CONVENTION.md` (the single source of truth).
-3. `03-execution-pipeline.md` — the ordered 5-step pipeline above, with strict HALT semantics.
+3. `03-execution-pipeline.md` — the ordered 6-step pipeline above, with strict HALT semantics.
 4. `04-ui-completion-gate.md` — no UI task is "done" until browser verification passes across viewports.
 5. `05-strict-instruction-scope.md` — do nothing without explicit instruction; ask for approval before taking any action beyond user requests.
+6. `06-doc-sync.md` — before declaring a task done or proposing commits, reconcile `docs/STRUCTURE.md`, `README.md`, and `docs/PLAN.md` with repository file changes.
+7. `07-path-convention.md` — never write absolute filesystem paths; always use repo-relative paths.
 
 ---
 
 ## Skills (`.agents/skills/`)
 
 1. `commit-proposer` — inspect diffs, draft conventional messages, propose, commit on approval.
-2. `local-storage-auditor` — schema, import/export, corruption recovery via `scripts/auditStorage.js`.
-3. `responsive-a11y-auditor` — touch targets ≥ 44×44, keyboard nav, WCAG contrast ≥ 4.5:1.
-4. `ui-browser-verifier` — multi-viewport rendering, interactive flows, console health.
-5. `vite-build-validator` — `npm run build` with 120s timeout.
+2. `doc-sync` — reconcile `docs/STRUCTURE.md`, `README.md`, and `docs/PLAN.md` with repo changes.
+3. `local-storage-auditor` — schema, import/export, corruption recovery via `scripts/auditStorage.js`.
+4. `responsive-a11y-auditor` — touch targets ≥ 44×44, keyboard nav, WCAG contrast ≥ 4.5:1.
+5. `ui-browser-verifier` — multi-viewport rendering, interactive flows, console health.
+6. `vite-build-validator` — `npm run build` with 120s timeout.
